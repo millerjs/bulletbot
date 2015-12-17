@@ -1,0 +1,21 @@
+language: python
+
+sudo: required  # needed for dist: trusty
+dist: trusty  # needed for libenchant1c2a
+
+python:
+  - "3.3"
+
+addons:
+  postgresql: '9.4'
+
+before_script:
+  - sudo apt-get update
+  # needed for pyenchant
+  - sudo apt-get install libenchant1c2a
+  - pip install -U pip
+  - python setup.py develop
+  # dump the versions of all pip packages for reproducibility
+  - pip freeze
+
+script: "py.test -v"
