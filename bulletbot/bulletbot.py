@@ -66,7 +66,7 @@ class BulletBot(object):
 
         return [index.strip() for index in re.split(delim, text)]
 
-    def merge_nick(self, nick):
+    def merge_nick(self, nick, realname=None):
         """If no :class:`.models.User` entry with `nick` exists in the
         database, create it.  Since we have a foreign key relationship
         from bullets to users, this should be called before all bullet
@@ -79,6 +79,9 @@ class BulletBot(object):
 
         user = User()
         user.nick = str(nick)
+        if realname is not None:
+            user.realname = realname
+
         with self.db.session() as s:
             s.merge(user)
 
