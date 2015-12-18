@@ -15,6 +15,7 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
 requirements = [
+    'pyenchant==1.6.6',
     'psycopg2==2.6.1',
     'emails==0.5.4',
     'sopel==6.1.1',
