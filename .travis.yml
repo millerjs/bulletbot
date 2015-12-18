@@ -10,12 +10,11 @@ addons:
   postgresql: '9.4'
 
 before_script:
-  - sudo apt-get update
-  # needed for pyenchant
-  - sudo apt-get install libenchant1c2a
+  - sudo apt-get -y update
+  - sudo apt-get -y install libenchant1c2a  # needed for pyenchant
   - pip install -U pip
   - python setup.py develop
-  # dump the versions of all pip packages for reproducibility
-  - pip freeze
+  - pip freeze # dump the versions of all pip packages for reproducibility
+
 
 script: "py.test -v"
