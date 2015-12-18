@@ -31,14 +31,14 @@ logging.basicConfig(
 
 HELP_MESSAGE = """
 
-To use the bullet bot, just talk to it throughout the day. Each time
-you hit enter, I'll add a bullet.  Bullets are sent out every evening.
-If you have any bullets that did not make the deadline, they will be
-sent the following day.
+To use me, just talk to me throughout the day.  Each time you hit
+enter, I'll add a bullet.  Bullets are sent out every evening.  If you
+have any bullets that did not make the deadline, they will be sent the
+following day.
 
 Commands:
-   .list                      - list bullets from today
-   .delete <no.> [<no. 2>]    - delete a bullet from today
+   .list                      - list unsent bullets
+   .delete <no.> [<no. 2>]    - delete unsent bullets
    .register <name >          - register the name to use on your bullets
 
 That's it!

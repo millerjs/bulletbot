@@ -19,14 +19,14 @@ from .bulletbot import BulletBot
 
 HELP_MESSAGE = """
 
-To use the bullet bot, just talk to it throughout the day. Each time
-you hit enter, I'll add a bullet.  Bullets are sent out every evening.
-If you have any bullets that did not make the deadline, they will be
-sent the following day.
+To use me, just talk to me throughout the day.  Each time you hit
+enter, I'll add a bullet.  Bullets are sent out every evening.  If you
+have any bullets that did not make the deadline, they will be sent the
+following day.
 
 Commands:
-   .list                      - list bullets from today
-   .delete <no.> [<no. 2>]    - delete a bullet from today
+   .list                      - list unsent bullets
+   .delete <no.> [<no. 2>]    - delete unsent bullets
 
 That's it!
 """.strip()
@@ -145,7 +145,7 @@ class SlackBulletBot(BulletBot):
             self.say(channel, self.list_bullets(nick))
 
         elif cmd in ['.help', 'help', '.comands', 'commands']:
-            self.say(channel, self.list_bullets(nick))
+            self.say(channel, HELP_MESSAGE)
 
         elif cmd in ['.delete', '.rm']:
             self.say(channel, self.delete_bullets(nick, text))
