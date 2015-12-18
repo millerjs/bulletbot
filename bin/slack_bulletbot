@@ -10,8 +10,6 @@ BulletBot module for Slack.
 
 """
 
-import configargparse
-from bulletbot.driver import SQLAlchemyDriver
 from bulletbot.slack import SlackBulletBot
 
 import logging
@@ -22,27 +20,7 @@ logging.basicConfig(
 )
 
 
-def main(args):
-    db_settings = dict(
-        host=args.host,
-        user=args.user,
-        password=args.password,
-        database=args.name)
-    db = SQLAlchemyDriver(**db_settings)
-    db.create_all(db_settings)
-    bbot = SlackBulletBot(db, args.token)
-    bbot.listen()
-
-
 if __name__ == '__main__':
-    parser = configargparse.ArgParser(default_config_files=[
-        '/etc/bulletbot.ini', '~/.bulletbot.ini'])
-    parser.add('-c', '--config', is_config_file=True, help='config file path')
-    parser.add('-H', '--host', env_var='BBOT_HOST', default='localhost')
-    parser.add('-n', '--name', env_var='BBOT_NAME', default='bullets')
-    parser.add('-u', '--user', env_var='BBOT_USER', required=True)
-    parser.add('-p', '--password', env_var='BBOT_PASS', required=True)
-    parser.add('-t', '--token', env_var='BBOT_TOKEN', required=True)
-
-    args = parser.parse_args()
-    main(args)
+    bbot = SlackBulletBot()
+    bbot.db.create_all(bbot.db_settings)
+    bbot.listen()

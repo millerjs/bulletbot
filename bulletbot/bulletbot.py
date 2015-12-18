@@ -7,10 +7,13 @@ bulletbot.bulletbot
 Defines :class:`.BulletBot`.
 """
 
+import configargparse
 import logging
 import re
 import sqlalchemy as sa
 import textwrap
+
+from .driver import SQLAlchemyDriver
 
 from .models import (
     Recipient,
@@ -34,8 +37,12 @@ class BulletBot(object):
     logger = logging.getLogger(__name__)
 
     _email_width = 80
+    _default_configs = [
+        '~/.bulletbot.ini',
+        '/etc/bulletbot.ini',
+    ]
 
-    def __init__(self, driver):
+    def __init__(self, driver=None, parser=None):
         """To instantiate BulletBot, you need to have pass a sqlalchemy
         database driver that
 
@@ -43,12 +50,40 @@ class BulletBot(object):
            SQLAlchemy session
 
         """
-        self.db = driver
+
+        parser = parser or self.get_parser()
+        self.args, _ = parser.parse_known_args()
+
+        if driver:
+            self.db = driver
+        else:
+            self.db = SQLAlchemyDriver(**self.db_settings)
 
         assert hasattr(self.db, 'session'),\
             'Driver has no session manager'
         assert hasattr(self.db.session, '__call__'),\
             'Driver session manager not callable'
+
+    @property
+    def db_settings(self):
+        return dict(
+            host=self.args.host,
+            user=self.args.user,
+            password=self.args.password,
+            database=self.args.database,
+        )
+
+    @staticmethod
+    def get_parser():
+        parser = configargparse.ArgParser(
+            default_config_files=BulletBot._default_configs)
+        parser.add('-c', '--config', is_config_file=True, help='config file path')
+        parser.add('-H', '--host', env_var='BBOT_HOST', default='localhost')
+        parser.add('-d', '--database', env_var='BBOT_DATABASE', default='bullets')
+        parser.add('-u', '--user', env_var='BBOT_USER', required=True)
+        parser.add('-p', '--password', env_var='BBOT_PASS', required=True)
+        parser.add('-t', '--token', env_var='BBOT_SLACK_TOKEN')
+        return parser
 
     @staticmethod
     def tokenize(text, delim=',[ ]*|[ ]+'):
@@ -337,10 +372,10 @@ class BulletBot(object):
                      .join(User.bullets)
                      .filter(Bullet.last_sent == None)  # noqa
                      .all())
-            bullets = {
-                user.realname or user.nick: self.unsent(s, user.nick)
-                for user in users
-            }
+            for user in users:
+                name = user.realname or user.nick
+                bullets[name] = bullets.get(name, [])
+                bullets[name] += self.unsent(s, user.nick)
 
             s.expunge_all()
 
