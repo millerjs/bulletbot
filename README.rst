@@ -23,9 +23,7 @@ Install
 .. _pip: https://pip.pypa.io/en/stable/installing/
 
 
-* Ubuntu
-
-.. codeblock:: bash
+* Ubuntu::
 
      sudo apt-get update
      # install python requirements
@@ -34,9 +32,9 @@ Install
      sudo apt-get install postgresql-X.Y postgresql-server-dev-9.4
      sudo apt-get install
 
-* Setup `virtualenv`
+Note: You'll have to edit `pg_hba.conf` to trust local connections to setup the database.
 
-.. codeblock:: bash
+* Setup `virtualenv`::
 
    $ mkdir ~/.venvs
    $ virtualenv ~/.venvs/bulletbot --python=$(which python3)
@@ -53,9 +51,7 @@ Install
 Slack
 =====
 
-Put this in ``~/.bullebot.ini`` and replace ``<X>``:
-
-.. codeblock::
+Put this in ``~/.bullebot.ini`` and replace ``<X>``::
 
     [database]
     name = <DATABASE NAME>
@@ -64,11 +60,9 @@ Put this in ``~/.bullebot.ini`` and replace ``<X>``:
     host = <POSTGRESQL HOST>
 
     [slack]
-    token = <TOKEN
+    token = <TOKEN>
 
-Execute
-
-.. codeblock:: bash
+Execute::
 
    $ ./bin/slack_bulletbot
 
@@ -76,27 +70,23 @@ Execute
 IRC
 ===
 
-Execute and follow config.
-
-.. codeblock:: bash
+Execute and follow config::
 
    $ sopel -w
    $ echo """from bulletbot.sopel_bulletbot import *  # noqa""" > cat ~/.sopel/modules/sopel_bulletbot.py
 
-Then append this to ``~/.sopel/default.cfg``:
-
-.. codeblock::
+Then append this to ``~/.sopel/default.cfg``::
 
     [core]
     enable = sopel_bulletbot,admin,reload
 
     [bulletbot]
-    host = localhost
-    user = test
-    password = test
-    database = bullets
+    host = <POSTGRESQL HOST>
+    user = <USER>
+    password = <PASSWORD>
+    database = <DATABASE NAME>
 
-.. codeblock:: bash
+Execute::
 
    $ sopel -w
 
