@@ -22,6 +22,7 @@ from bulletbot.driver import SQLAlchemyDriver
 from bulletbot.bulletbot import BulletBot
 from bulletbot.models import Base
 
+import configargparse
 import logging
 
 logging.basicConfig(
@@ -47,37 +48,11 @@ That's it!
 SKIP_TRIGGERS = ['help', 'commands']
 
 
-class BulletBotSection(StaticSection):
-    host = ValidatedAttribute('host', default='localhost')
-    user = ValidatedAttribute('user', default=NO_DEFAULT)
-    password = ValidatedAttribute('password', default=NO_DEFAULT)
-    database = ValidatedAttribute('database', default='bullets')
-
-
-def configure(config):
-    config.define_section('bulletbot', BulletBotSection, validate=False)
-    config.bulletbot.configure_setting(
-        'host', 'Enter the SQL host for bullet database.')
-    config.bulletbot.configure_setting(
-        'user', 'Enter the SQL user for bullet database.')
-    config.bulletbot.configure_setting(
-        'password', 'Enter the SQL password for bullet database.')
-    config.bulletbot.configure_setting(
-        'database', 'Enter the SQL database name for bullet database.')
-
-
 def setup(bot):
-    bot.config.define_section('bulletbot', BulletBotSection, validate=False)
-    db_settings = dict(
-        host=bot.config.bulletbot.host,
-        user=bot.config.bulletbot.user,
-        password=bot.config.bulletbot.password,
-        database=bot.config.bulletbot.database,
-    )
-    db = SQLAlchemyDriver.from_settings(db_settings)
-    db.create_all(db_settings)
-    Base.metadata.create_all(db.engine)
-    bot.memory['bbot'] = BulletBot(db)
+    bbot = BulletBot()
+    bbot.db.create_all(bbot.db_settings)
+    Base.metadata.create_all(bbot.db.engine)
+    bot.memory['bbot'] = bbot
 
 
 def shutdown(bot):

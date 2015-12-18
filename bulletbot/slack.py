@@ -37,9 +37,9 @@ class SlackBulletBot(BulletBot):
 
     """
 
-    def __init__(self, db, token):
+    def __init__(self, db=None, token=None):
         super(SlackBulletBot, self).__init__(db)
-        self.sc = SlackClient(token)
+        self.sc = SlackClient(token or self.args.token)
 
     def listen(self):
         """Connect a websocket and read/parse incoming events.
