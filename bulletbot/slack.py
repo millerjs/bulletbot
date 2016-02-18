@@ -144,7 +144,7 @@ class SlackBulletBot(BulletBot):
         if cmd in ['.ls', '.list']:
             self.say(channel, self.list_bullets(nick))
 
-        elif cmd in ['.help', 'help', '.comands', 'commands']:
+        elif cmd in ['.help', '.comands']:
             self.say(channel, HELP_MESSAGE)
 
         elif cmd in ['.delete', '.rm']:
@@ -155,5 +155,6 @@ class SlackBulletBot(BulletBot):
             self.say(channel, HELP_MESSAGE)
 
         else:
-            bullet = '{} {}'.format(cmd, text)
-            self.say(channel, self.create_bullet(nick, bullet))
+            full_text = '{} {}'.format(cmd, text)
+            for line in full_text.split('\n'):
+                self.say(channel, self.create_bullet(nick, line))

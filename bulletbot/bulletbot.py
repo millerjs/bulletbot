@@ -467,6 +467,11 @@ class BulletBot(object):
         :param:`message` is provided, send this message instead.
 
         """
+
+        if not self.get_unsent_bullets():
+            self.logger.warning("No bullets to send")
+            return
+
         msg = MIMEText(message or self.compile_plaintext_bullets())
 
         assert self.args.email_user, 'No email user specified'
@@ -506,8 +511,8 @@ class BulletBot(object):
         """
 
         self._email_password = (
-            self.args.email_pass
-            or getpass('Email password for {}: '.format(self.args.email_user))
+            self.args.email_pass or
+            getpass('Email password for {}: '.format(self.args.email_user))
         )
         cron_args = {k: v for k, v in dict(
             hour=self.args.cron_hour,
