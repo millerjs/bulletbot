@@ -483,7 +483,7 @@ class BulletBot(object):
         msg['From'] = self.args.email_from
         msg['To'] = self.args.email_to
 
-        print('Connecting to {}'.format(self.args.email_server))
+        self.logger.info('Connecting to {}'.format(self.args.email_server))
         server = smtplib.SMTP(self.args.email_server)
         server.starttls()
         server.ehlo()
@@ -498,15 +498,16 @@ class BulletBot(object):
         self.logger.info(msg)
 
     def send_bullets_mark_sent(self):
-        """Send bullets and mark all unsent bullets sent.
-
-        """
+        """Send bullets and mark all unsent bullets sent."""
 
         self.send_bullets()
         self.mark_all_sent()
 
-    def schedule_send_bullets(self):
-        """Blocking call to schedule bullets.
+    def set_email_password(self):
+        """Sets the email password from one of two sources
+
+        1. The instances args
+        2. If the password is not in the args, prompt a user for it.
 
         """
 
@@ -514,11 +515,26 @@ class BulletBot(object):
             self.args.email_pass or
             getpass('Email password for {}: '.format(self.args.email_user))
         )
-        cron_args = {k: v for k, v in dict(
-            hour=self.args.cron_hour,
-            minute=self.args.cron_minute,
-        ).items() if v}
 
+    def get_email_cron_args(self):
+        """Conditionally pulls the email time scheule arguments into a
+        dict.
+
+        """
+
+        return {
+            k: v for k, v in dict(
+                hour=self.args.cron_hour,
+                minute=self.args.cron_minute,
+            ).items() if v
+        }
+
+    def schedule_send_bullets(self):
+        """Blocking call to schedule bullets."""
+
+        self.set_email_password()
+
+        cron_args = self.get_email_cron_args()
         assert cron_args, 'No cron args specified.'
 
         scheduler = BlockingScheduler()
