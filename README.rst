@@ -6,7 +6,8 @@ BulletBot
         :target: https://travis-ci.org/millerjs/bulletbot
         :alt: Travis
 
-Chat bot for logging what employee completed tasks.
+
+BulletBot is a chat bot for logging employee completed tasks.  Talk to it throughout to day.  Schedule aggregations to be sent out daily. Prosper.
 
 * Free software: ISC license
 
@@ -70,6 +71,8 @@ Execute::
 IRC
 ===
 
+**deprecation warning:** No longer maintained.
+
 Execute and follow config::
 
    $ sopel -w
@@ -94,5 +97,5 @@ Execute::
 Features
 --------
 
-* IRC
-* TODO: Slack
+* Slack
+* IRC (not maintained)
