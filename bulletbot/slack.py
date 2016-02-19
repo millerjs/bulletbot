@@ -53,7 +53,7 @@ class SlackBulletBot(BulletBot):
                 except Exception as e:
                     self.logger.exception(e)
         else:
-            print("Connection Failed, invalid token?")
+            self.logger.error("Connection Failed, invalid token?")
 
     def _parse_reads(self, reads):
         """Loop over events read from the websocket
@@ -144,7 +144,7 @@ class SlackBulletBot(BulletBot):
         if cmd in ['.ls', '.list']:
             self.say(channel, self.list_bullets(nick))
 
-        elif cmd in ['.help', 'help', '.comands', 'commands']:
+        elif cmd in ['.help', '.comands']:
             self.say(channel, HELP_MESSAGE)
 
         elif cmd in ['.delete', '.rm']:
@@ -155,5 +155,10 @@ class SlackBulletBot(BulletBot):
             self.say(channel, HELP_MESSAGE)
 
         else:
-            bullet = '{} {}'.format(cmd, text)
-            self.say(channel, self.create_bullet(nick, bullet))
+            full_text = '{} {}'.format(cmd, text)
+            if 'fun' in full_text.lower():
+                self.say(channel, ':tada: ' * 1000)
+                self.say(channel, ':tada: :tada: :tada: THE MAGIC WORD OF THE MONTH IS FUN! :tada: :tada: :tada: ')
+
+            for line in full_text.split('\n'):
+                self.say(channel, self.create_bullet(nick, line))
