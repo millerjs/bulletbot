@@ -39,12 +39,19 @@ class SlackBulletBot(BulletBot):
 
     def __init__(self, db=None, token=None):
         super(SlackBulletBot, self).__init__(db)
-        self.sc = SlackClient(token or self.args.token)
+        self.token = token or self.args.token
+        self.reset_sc()
+
+    def reset_sc(self):
+        """Create a slack client with self.token"""
+
+        self.sc = SlackClient(self.token)
 
     def listen(self):
         """Connect a websocket and read/parse incoming events.
 
         """
+
         if self.sc.rtm_connect():
             self.sc.server.websocket.sock.setblocking(True)
             while True:
@@ -52,6 +59,8 @@ class SlackBulletBot(BulletBot):
                     self._parse_reads(self.sc.rtm_read())
                 except Exception as e:
                     self.logger.exception(e)
+                    self.reset_sc()
+                    return self.listen()
         else:
             self.logger.error("Connection Failed, invalid token?")
 
