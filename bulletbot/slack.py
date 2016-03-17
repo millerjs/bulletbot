@@ -13,6 +13,7 @@ To use, run ``bin/slack_bulletbot``
 from slackclient import SlackClient
 
 import simplejson
+import time
 
 from .bulletbot import BulletBot
 
@@ -59,10 +60,13 @@ class SlackBulletBot(BulletBot):
                     self._parse_reads(self.sc.rtm_read())
                 except Exception as e:
                     self.logger.exception(e)
-                    self.reset_sc()
-                    return self.listen()
+                    break
         else:
             self.logger.error("Connection Failed, invalid token?")
+
+        time.sleep(1)
+        self.reset_sc()
+        return self.listen()
 
     def _parse_reads(self, reads):
         """Loop over events read from the websocket
