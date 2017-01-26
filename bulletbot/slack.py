@@ -169,9 +169,6 @@ class SlackBulletBot(BulletBot):
 
         else:
             full_text = '{} {}'.format(cmd, text)
-            if 'fun' in full_text.lower():
-                self.say(channel, ':tada: ' * 1000)
-                self.say(channel, ':tada: :tada: :tada: THE MAGIC WORD OF THE MONTH IS FUN! :tada: :tada: :tada: ')
 
             for line in full_text.split('\n'):
                 self.say(channel, self.create_bullet(nick, line))
