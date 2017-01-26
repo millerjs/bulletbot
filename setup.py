@@ -15,6 +15,12 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read().replace('.. :changelog:', '')
 
 requirements = [
+    'APScheduler==3.0.5',
+    'markovify==0.2.5',
+    'simplejson==3.8.1',
+    'slackclient==0.16',
+    'ConfigArgParse==0.10.0',
+    'pyenchant==1.6.6',
     'psycopg2==2.6.1',
     'emails==0.5.4',
     'sopel==6.1.1',

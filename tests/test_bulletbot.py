@@ -8,6 +8,7 @@ test_bulletbot
 Tests for `bulletbot` module.
 """
 
+import os
 import sys
 import unittest
 
@@ -25,15 +26,15 @@ from bulletbot.models import (
     Bullet,
 )
 
-db_settings = {
-    'host': '',
-    'user': 'test',
-    'password': 'test',
-    'database': '__test_bulletbot__',
-}
 
-db = SQLAlchemyDriver.from_settings(db_settings)
-db.create_all(db_settings)
+os.environ['BBOT_HOST'] = 'localhost'
+os.environ['BBOT_USER'] = 'test'
+os.environ['BBOT_PASS'] = 'password'
+os.environ['BBOT_DATABASE'] = '__test_bulletbot__'
+
+bbot = BulletBot()
+db = bbot.db
+db.create_all(bbot.db_settings)
 bulletbot.models.Base.metadata.create_all(db.engine)
 
 
@@ -50,7 +51,7 @@ class TestBulletbot(unittest.TestCase):
             s.query(Recipient).delete()
             s.query(Bullet).delete()
             s.query(User).delete()
-        self.bot = BulletBot(db)
+        self.bot = bbot
         self.bot.logger.level = logging.DEBUG
         self.create_bullets()
 
