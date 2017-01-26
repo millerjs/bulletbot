@@ -257,7 +257,7 @@ class BulletBot(object):
             indices = [int(t) for t in self.tokenize(text)]
         except ValueError:
             response = ("Please specify indices of bullets from .list. "
-                        "e.g. [1, 3]")
+                        "e.g. `.delete 1, 3`")
         else:
             response = self._delete_bullets(nick, indices)
 
