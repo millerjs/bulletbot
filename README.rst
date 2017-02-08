@@ -66,6 +66,10 @@ Put this in ``~/.bullebot.ini`` and replace ``<X>``::
 Execute::
 
    $ ./bin/slack_bulletbot
+   
+Run the email scheduler::
+
+   $ ./bin/email_dispatcher
 
 
 IRC
