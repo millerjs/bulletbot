@@ -476,6 +476,7 @@ class BulletBot(object):
 
         assert self.args.email_user, 'No email user specified'
         assert self.args.email_server, 'No email server specified'
+        assert self.args.email_port, 'No email server port specified'
         assert self.args.email_to, 'No email recip specified'
         assert self._email_password, 'No email pass specified'
 
@@ -484,7 +485,7 @@ class BulletBot(object):
         msg['To'] = self.args.email_to
 
         self.logger.info('Connecting to {}'.format(self.args.email_server))
-        server = smtplib.SMTP(self.args.email_server)
+        server = smtplib.SMTP(self.args.email_server, self.args.email_port)
         server.starttls()
         server.ehlo()
         server.login(self.args.email_user, self._email_password)
